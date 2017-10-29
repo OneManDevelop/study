@@ -9,6 +9,8 @@ using hash;
 using address;
 using System.Threading;
 using logs;
+using System.Xml;
+using System.Data;
 
 namespace chatbot
 {
@@ -16,7 +18,11 @@ namespace chatbot
     {
         public static void Main(string[] args)
         {
+            /*XmlDocument Data;
+            DataTable Emptable;
+            DataSet disease;*/
             int logLength = 0;
+            string xmlpath = @"C:\bot_data\diseases.xml";
             string path1 = @"C:\bot_data\msg.txt";
             string path2 = @"C:\bot_data\auth.txt";
             string logPath = @"C:\bot_data\log.txt";
@@ -27,15 +33,18 @@ namespace chatbot
             string input_c = "";
             bool sending = false;
             bool opened = false;
-            long dialogID = 199245750;                           // ID диалога   
+            long dialogID = 199245750;                         
             char s;
+
+            XmlTextReader reader = new XmlTextReader(xmlpath); // testing feature
+
             FileStream file2 = new FileStream(path2, FileMode.OpenOrCreate);
             StreamReader reader2 = new StreamReader(file2);           
-            string email = reader2.ReadLine();         // email или телефон
-            string pass = reader2.ReadLine();               // пароль для авторизации       
-            string dialog_ID = reader2.ReadLine();     // ID диалога
+            string email = reader2.ReadLine();        
+            string pass = reader2.ReadLine();                  
+            string dialog_ID = reader2.ReadLine();    
             reader2.Close();
-            ulong appID = 6108951;                      // ID приложения
+            ulong appID = 6108951;                     
             Console.SetWindowSize(80, 30);
             Console.Title = "c#at";
             email = email.Replace("login: ", "");
@@ -67,9 +76,19 @@ namespace chatbot
                 Settings = scope
             });
 
+            /*using (StreamReader streamreader = new StreamReader(xmlpath, System.Text.Encoding.UTF8))
+            {
+                disease = new DataSet();
+                disease.ReadXml(streamreader, XmlReadMode.Auto);
+                Emptable = disease.Tables[0];    // присваиваем данные БД нашей таблицы
+            }*/
 
 
-
+            while (reader.Read()) //testing feature
+            {
+                Console.WriteLine(reader.Name);
+            }
+            Console.ReadLine();
 
 
 
@@ -157,4 +176,4 @@ namespace chatbot
 
         }
     }
-}//git second
+}//git 2
