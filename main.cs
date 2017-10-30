@@ -11,6 +11,7 @@ using System.Threading;
 using logs;
 using System.Xml;
 using System.Data;
+using engines;
 
 namespace chatbot
 {
@@ -22,6 +23,7 @@ namespace chatbot
             DataTable Emptable;
             DataSet disease;*/
             int logLength = 0;
+            int maximum = 0;
             string xmlpath = @"C:\bot_data\diseases.xml";
             string path1 = @"C:\bot_data\msg.txt";
             string path2 = @"C:\bot_data\auth.txt";
@@ -35,6 +37,8 @@ namespace chatbot
             bool opened = false;
             long dialogID = 199245750;                         
             char s;
+
+            string[] outputArr = new string[5];
 
             XmlTextReader readerr = new XmlTextReader(xmlpath); // testing feature
 
@@ -65,6 +69,7 @@ namespace chatbot
             Signature sign = new Signature();
             Name nm = new Name();
             Log wLog = new Log();
+            Search engine = new Search();
 
 
 
@@ -90,7 +95,7 @@ namespace chatbot
             }
             Console.ReadLine();*/
 
-
+            /*
             XmlReaderSettings settings = new XmlReaderSettings();
             settings.DtdProcessing = DtdProcessing.Parse;
             XmlReader reader = XmlReader.Create(xmlpath, settings);
@@ -131,12 +136,12 @@ namespace chatbot
                         Console.Write("</{0}>", reader.Name);
                         break;
                 }
-            }
+            }*/
 
             while (true)//start:loop
             {
-                
 
+                output = "start value";
 
 
                 FileStream file1 = new FileStream(path1, FileMode.OpenOrCreate);
@@ -168,11 +173,12 @@ namespace chatbot
 
                 input = input_c;
 
-                nm.Called(input, ref sending);
+                nm.Called(ref input, ref sending);
 
                 if ((input != lastMessage) && (sending == true))
                 {
-                    hs.GetAns(input, ref output);
+                    hs.GetAns(input, ref output);                   
+                    //Console.WriteLine(outputArr[1]);
                     File.WriteAllText(path1, input);
                 }
                 else
@@ -184,7 +190,7 @@ namespace chatbot
 
 
 
-                sign.MakeSign(ref output);                                    // giving colored list of in/out messages
+                                                  // giving colored list of in/out messages
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.WriteLine("\n" + "in:" + "\n" + input);
                 wLog.AddLog(ref opened, ref logLength, logLengthPath, logPath, "in: " + input);
@@ -199,10 +205,20 @@ namespace chatbot
                 Console.WriteLine("\n" + "out:" + "\n" + output + "\n" + "send: " + sending);
                 wLog.AddLog(ref opened, ref logLength, logLengthPath, logPath, "out: " + output + "||" + "send: " + sending);
 
-
+                engine.CountMatches(input, xmlpath, ref maximum);
+                engine.FindOut(maximum, ref outputArr, input, xmlpath);
 
                 if (sending)
                 {
+                    
+                    foreach (string vers in outputArr)
+                    {
+                       // Console.WriteLine("xml found");
+                        output = output + " " + vers;
+                    }
+
+                    sign.MakeSign(ref output);
+
                     var send = vk.Messages.Send(new MessagesSendParams
                     {
                         UserId = dialogID,

@@ -4,7 +4,7 @@ namespace address
 {
     class Name
     {
-        public void Called(string msg, ref bool named)
+        public void Called( ref string msg, ref bool named)
         {           
             string calling = "empty";
             named = false;
@@ -13,6 +13,7 @@ namespace address
                 calling = msg.Substring(0, 4);
                 if ((calling == "bot ") || (calling == "бот "))
                 {
+                    msg = msg.Replace(calling, "");
                     named = true;
                 }
             }
