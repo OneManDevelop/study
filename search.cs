@@ -8,35 +8,36 @@ namespace try1
 {
     class Search
     {
-        static void CountMatches(string[] inputs, string path, ref int max)
+        static void CountMatches(string[] inputs, ref string[] outputs, string path, ref int max)
         {
             int i = 0;
+            int k = 0;
+            int g;
             max = 0;
             XmlReaderSettings settings = new XmlReaderSettings();
             settings.DtdProcessing = DtdProcessing.Parse;
             XmlReader reader = XmlReader.Create(path, settings);
             XmlWriter writer = XmlWriter.Create(path);
 
+            for(g=0; g<=outputs.Length; g++)
+            {
+                outputs[g] = "";
+            }
+
             reader.MoveToContent();
             // Parse the file and display each of the nodes.
             while (reader.Read())
-            {
-                if(reader.Name == "reset")
-                {
-                    i = 0;
-                }
-                else
+            {               
                 {
                     foreach(string sympt in inputs)
                     {
-                        if((sympt == reader.Value) && (reader.Name == "sympt"))
+                        foreach(string val in reader.Value.Split(','))
                         {
-                            i++;
+                            if (sympt == reader.Value)
+                            {
+                                i++;
+                            }
                         }
-                    }
-                    if(reader.Name == "matches")
-                    {
-                        writer.WriteValue(i.ToString());
                     }
                     if (i > max)
                     {
