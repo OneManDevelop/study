@@ -33,7 +33,7 @@ namespace try1
                     {
                         foreach(string val in reader.Value.Split(','))
                         {
-                            if (sympt == reader.Value)
+                            if (sympt == val)
                             {
                                 i++;
                             }
