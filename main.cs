@@ -64,7 +64,7 @@ namespace chatbot
                 Console.WriteLine("\n" + "incorrect dialog_id in auth.txt");
             }           
             Settings scope = Settings.All;      // Приложение имеет доступ ко всему
-            var vk = new VkApi();
+            var vk = new VkApi();               // ссылки на статические классы
             Hash hs = new Hash();
             Signature sign = new Signature();
             Name nm = new Name();
@@ -157,14 +157,14 @@ namespace chatbot
 
 
 
-                foreach (var message2 in mess.Messages)
+                foreach (var message2 in mess.Messages)            
                 {                    
                     input = message2.Body;
                 }
 
                 input_c = "";
 
-                foreach (char symb in input)
+                foreach (char symb in input)                   // регистро-независимость
 
                 {
                     s = Char.ToLower(symb);
@@ -173,13 +173,13 @@ namespace chatbot
 
                 input = input_c;
 
-                nm.Called(ref input, ref sending);
+                nm.Called(ref input, ref sending);            // проверка наличия обращения "bot"
 
-                if ((input != lastMessage) && (sending == true))
+                if ((input != lastMessage) && (sending == true))  // проверка сообщения на совпадение с последним
                 {
-                    hs.GetAns(input, ref output);                   
+                    hs.GetAns(input, ref output);                  // осталось с лета, удалить 
                     //Console.WriteLine(outputArr[1]);
-                    File.WriteAllText(path1, input);
+                    File.WriteAllText(path1, input);          
                 }
                 else
                 {
@@ -205,8 +205,8 @@ namespace chatbot
                 Console.WriteLine("\n" + "out:" + "\n" + output + "\n" + "send: " + sending);
                 wLog.AddLog(ref opened, ref logLength, logLengthPath, logPath, "out: " + output + "||" + "send: " + sending);
 
-                engine.CountMatches(input, xmlpath, ref maximum);
-                engine.FindOut(maximum, ref outputArr, input, xmlpath);
+                engine.CountMatches(input, xmlpath, ref maximum);              // счетчик совпадений
+                engine.FindOut(maximum, ref outputArr, input, xmlpath);        // вывод, при макс. кол-ве совпадений
 
                 if (sending)
                 {
@@ -214,10 +214,10 @@ namespace chatbot
                     foreach (string vers in outputArr)
                     {
                        // Console.WriteLine("xml found");
-                        output = output + " " + vers;
+                        output = output + " " + vers;               
                     }
 
-                    sign.MakeSign(ref output);
+                    sign.MakeSign(ref output);                         // подпись
 
                     var send = vk.Messages.Send(new MessagesSendParams
                     {
@@ -233,4 +233,4 @@ namespace chatbot
 
         }
     }
-}//git 2
+}

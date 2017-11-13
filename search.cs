@@ -79,6 +79,29 @@ namespace engines
                     k++;
                 }
             }
+            reader.Close();
+        }
+
+        public void FindAbout(ref string output, string name, string path)
+        {
+            bool found = false;
+            XmlReaderSettings settings = new XmlReaderSettings();
+            settings.DtdProcessing = DtdProcessing.Parse;
+            XmlReader reader = XmlReader.Create(path, settings);
+
+            reader.MoveToContent();
+
+            output = "not found";
+
+            while ( (reader.Read()) && (found == false) )
+            {
+                if(reader.Value.Split(',')[0] == name)
+                {
+                    output = reader.Value.Split(',')[1];
+                    found = true;
+                }
+            }
+            reader.Close();
         }
     }
 }
