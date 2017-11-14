@@ -32,11 +32,9 @@ namespace chatbot
             string lastMessage = "empty";
             string output = "test";
             string input = "empty";
-            string input_c = "";
             bool sending = false;
             bool opened = false;
-            long dialogID = 199245750;                         
-            char s;
+            long dialogID;                         
 
             string[] outputArr = new string[5];
 
@@ -57,15 +55,16 @@ namespace chatbot
             try
             {
                 dialogID = Convert.ToInt64(dialog_ID);
+                Console.WriteLine("ID converted");
             }
             catch
             {
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.WriteLine("\n" + "incorrect dialog_id in auth.txt");
+                dialogID = 199245750;
             }           
             Settings scope = Settings.All;      // Приложение имеет доступ ко всему
             var vk = new VkApi();               // ссылки на статические классы
-            Hash hs = new Hash();
             Signature sign = new Signature();
             Name nm = new Name();
             Log wLog = new Log();
@@ -80,69 +79,10 @@ namespace chatbot
                 Password = pass,
                 Settings = scope
             });
+         
 
-            /*using (StreamReader streamreader = new StreamReader(xmlpath, System.Text.Encoding.UTF8))
+            while (true)
             {
-                disease = new DataSet();
-                disease.ReadXml(streamreader, XmlReadMode.Auto);
-                Emptable = disease.Tables[0];    // присваиваем данные БД нашей таблицы
-            }*/
-
-
-            /*while (readerr.Read()) //testing feature
-            {
-                Console.WriteLine(readerr.Name + " " + readerr.Value);
-            }
-            Console.ReadLine();*/
-
-            /*
-            XmlReaderSettings settings = new XmlReaderSettings();
-            settings.DtdProcessing = DtdProcessing.Parse;
-            XmlReader reader = XmlReader.Create(xmlpath, settings);
-
-            reader.MoveToContent();
-            // Parse the file and display each of the nodes.
-            while (reader.Read())
-            {
-                switch (reader.NodeType)
-                {
-                    case XmlNodeType.Element:
-                        Console.Write("<{0}>", reader.Name);
-                        break;
-                    case XmlNodeType.Text:
-                        Console.Write(reader.Value);
-                        break;
-                    case XmlNodeType.CDATA:
-                        Console.Write("<![CDATA[{0}]]>", reader.Value);
-                        break;
-                    case XmlNodeType.ProcessingInstruction:
-                        Console.Write("<?{0} {1}?>", reader.Name, reader.Value);
-                        break;
-                    case XmlNodeType.Comment:
-                        Console.Write("<!--{0}-->", reader.Value);
-                        break;
-                    case XmlNodeType.XmlDeclaration:
-                        Console.Write("<?xml version='1.0'?>");
-                        break;
-                    case XmlNodeType.Document:
-                        break;
-                    case XmlNodeType.DocumentType:
-                        Console.Write("<!DOCTYPE {0} [{1}]", reader.Name, reader.Value);
-                        break;
-                    case XmlNodeType.EntityReference:
-                        Console.Write(reader.Name);
-                        break;
-                    case XmlNodeType.EndElement:
-                        Console.Write("</{0}>", reader.Name);
-                        break;
-                }
-            }*/
-
-            while (true)//start:loop
-            {
-
-                output = "start value";
-
 
                 FileStream file1 = new FileStream(path1, FileMode.OpenOrCreate);
                 StreamReader reader1 = new StreamReader(file1);
@@ -157,29 +97,38 @@ namespace chatbot
 
 
 
-                foreach (var message2 in mess.Messages)            
+                foreach (var message_txt in mess.Messages)            
                 {                    
-                    input = message2.Body;
+                    input = message_txt.Body;
                 }
 
-                input_c = "";
-
-                foreach (char symb in input)                   // регистро-независимость
-
-                {
-                    s = Char.ToLower(symb);
-                    input_c = input_c + s;
-                }
-
-                input = input_c;
+                nm.GetLow(ref input);
 
                 nm.Called(ref input, ref sending);            // проверка наличия обращения "bot"
 
                 if ((input != lastMessage) && (sending == true))  // проверка сообщения на совпадение с последним
                 {
-                    hs.GetAns(input, ref output);                  // осталось с лета, удалить 
+                    //hs.GetAns(input, ref output);                  // осталось с лета, удалить 
                     //Console.WriteLine(outputArr[1]);
-                    File.WriteAllText(path1, input);          
+                    File.WriteAllText(path1, input);
+                    output = "";
+                    engine.CountMatches(input, xmlpath, ref maximum);              // счетчик совпадений
+                    engine.FindOut(maximum, ref outputArr, input, xmlpath);       // вывод при макс. кол-ве совпадений
+
+
+                    foreach (string vers in outputArr)
+                    {
+                        // Console.WriteLine("xml found");
+                        output = output + " " + vers;
+                    }
+
+                    sign.MakeSign(ref output);                         // подпись
+
+                    var send = vk.Messages.Send(new MessagesSendParams
+                    {
+                        UserId = dialogID,
+                        Message = output
+                    });
                 }
                 else
                 {
@@ -205,30 +154,12 @@ namespace chatbot
                 Console.WriteLine("\n" + "out:" + "\n" + output + "\n" + "send: " + sending);
                 wLog.AddLog(ref opened, ref logLength, logLengthPath, logPath, "out: " + output + "||" + "send: " + sending);
 
-                engine.CountMatches(input, xmlpath, ref maximum);              // счетчик совпадений
-                engine.FindOut(maximum, ref outputArr, input, xmlpath);        // вывод, при макс. кол-ве совпадений
 
-                if (sending)
-                {
-                    
-                    foreach (string vers in outputArr)
-                    {
-                       // Console.WriteLine("xml found");
-                        output = output + " " + vers;               
-                    }
 
-                    sign.MakeSign(ref output);                         // подпись
-
-                    var send = vk.Messages.Send(new MessagesSendParams
-                    {
-                        UserId = dialogID,
-                        Message = output
-                    });
-                }
                 Console.ReadLine();
                 Thread.Sleep(5000);               
             }
-            //end:loop
+            
 
 
         }

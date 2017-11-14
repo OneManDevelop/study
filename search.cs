@@ -35,51 +35,58 @@ namespace engines
                     {
                         max = i;
                     }
-                    i = 0;
-                    Console.WriteLine("max " + max);
+                    i = 0;                  
                 }
             }
+            Console.WriteLine("max " + max);
         }
         
        public void FindOut(int max, ref string[] outputs, string inputs, string path)
         {
-            XmlReaderSettings settings = new XmlReaderSettings();
-            settings.DtdProcessing = DtdProcessing.Parse;
-            XmlReader reader = XmlReader.Create(path, settings);
-
-            int k = 0;
-            int g;
-            int i = 0;
-
-            for(g=0; g<outputs.Length; g++)
+            if (max != 0)
             {
-                outputs[g] = "";
-            }
+                XmlReaderSettings settings = new XmlReaderSettings();
+                settings.DtdProcessing = DtdProcessing.Parse;
+                XmlReader reader = XmlReader.Create(path, settings);
 
-            reader.MoveToContent();
-            // Parse the file and display each of the nodes.
-            while (reader.Read())
-            {
-                i = 0;
-                foreach (string sympt in inputs.Split(','))
+                int k = 0;
+                int g;
+                int i = 0;
+
+                for (g = 0; g < outputs.Length; g++)
                 {
-                    foreach (string val in reader.Value.Split(','))
+                    outputs[g] = "";
+                }
+
+                reader.MoveToContent();
+                // Parse the file and display each of the nodes.
+                while (reader.Read())
+                {
+                    i = 0;
+                    foreach (string sympt in inputs.Split(','))
                     {
-                        if (sympt == val)
+                        foreach (string val in reader.Value.Split(','))
                         {
-                            Console.WriteLine(sympt + " = "+ val + " in " + inputs);
-                            i++;
+                            if (sympt == val)
+                            {
+                                Console.WriteLine(sympt + " = " + val + " in " + inputs);
+                                i++;
+                            }
                         }
                     }
+                    if ((i == max) && (k < outputs.Length) && (max != 0))
+                    {
+                        outputs[k] = reader.Value.Split(',')[0];
+                        Console.WriteLine("findout " + outputs[k]);
+                        k++;
+                    }
                 }
-                if ((i == max) && (k<outputs.Length) && (max != 0))
-                {
-                    outputs[k] = reader.Value.Split(',')[0];
-                    Console.WriteLine("findout " + outputs[k]);
-                    k++;
-                }
+                reader.Close();
             }
-            reader.Close();
+            else
+            {
+                outputs[0] = "no matches";
+            }
         }
 
         public void FindAbout(ref string output, string name, string path)

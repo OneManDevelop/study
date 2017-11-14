@@ -1,5 +1,7 @@
 ﻿
 
+using System;
+
 namespace address
 {
     class Name
@@ -33,9 +35,20 @@ namespace address
             {
                 mode = 2;
             }
+        }
 
+        public void GetLow(ref string input)
+        {
+            string copy = "";
+            char letter;
 
+            foreach (char symb in input)                   // регистро-независимость
+
+            {
+                letter = Char.ToLower(symb);
+                copy = copy + letter;
+            }
+            input = copy;
         }
     }
 }
-//git first
