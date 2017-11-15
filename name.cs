@@ -1,13 +1,11 @@
-﻿
-
-using System;
+﻿using System;
 
 namespace address
 {
     class Name
     {
-        public void Called( ref string msg, ref bool named)        
-        {           
+        public void Called(ref string msg, ref bool named)
+        {
             string calling;
             named = false;
             if (msg.Length >= 5)
@@ -20,35 +18,46 @@ namespace address
                 }
             }
         }
-        public void GetMode(string msg, ref int mode)
+        public void GetMode(ref string msg, ref int mode)
         {
             mode = 0;
-            if(msg.Substring(0, 8) == "симтомы")
+            try
             {
-                mode = 0;                            //избыточное выражение для понятности кода
+                if (msg.Substring(0, 9) == "симтомы ")
+                {
+                    mode = 1;
+                    msg = msg.Replace("симптомы ", "");                            //избыточное выражение для понятности кода
+                }
+                if ((msg.Substring(0, 9) == "описание ") && (mode == 0))
+                {
+                    mode = 2;
+                    msg = msg.Replace("описание ", "");
+                }
+                if ((msg.Substring(0, 12)) == "все симптомы" && (mode == 0))
+                {
+                    mode = 3;
+                    msg = msg.Replace("все симптомы", "");
+                }
             }
-            if (msg.Substring(0, 8) == "описание")
+            catch
             {
-                mode = 1;
-            }
-            if (msg.Substring(0, 6) == "узнать")
-            {
-                mode = 2;
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Too short string");
             }
         }
 
-        public void GetLow(ref string input)
+        public void GetLow(ref string inp)
         {
             string copy = "";
             char letter;
 
-            foreach (char symb in input)                   // регистро-независимость
+            foreach (char symb in inp)                   // регистро-независимость
 
             {
                 letter = Char.ToLower(symb);
                 copy = copy + letter;
             }
-            input = copy;
+            inp = copy;
         }
     }
 }

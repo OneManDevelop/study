@@ -1,8 +1,4 @@
-﻿/*using VkNet;
-using VkNet.Enums.Filters;
-using VkNet.Model.RequestParams;*/
-
-namespace sign
+﻿namespace sign
 {
     class Signature
     {
@@ -13,4 +9,3 @@ namespace sign
 
     }
 }
-//git first

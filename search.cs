@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Xml;
 
 namespace engines
@@ -38,6 +35,7 @@ namespace engines
                     i = 0;                  
                 }
             }
+            Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("max " + max);
         }
         
@@ -69,6 +67,7 @@ namespace engines
                         {
                             if (sympt == val)
                             {
+                                Console.ForegroundColor = ConsoleColor.White;
                                 Console.WriteLine(sympt + " = " + val + " in " + inputs);
                                 i++;
                             }
@@ -77,6 +76,7 @@ namespace engines
                     if ((i == max) && (k < outputs.Length) && (max != 0))
                     {
                         outputs[k] = reader.Value.Split(',')[0];
+                        Console.ForegroundColor = ConsoleColor.White;
                         Console.WriteLine("findout " + outputs[k]);
                         k++;
                     }
@@ -89,7 +89,7 @@ namespace engines
             }
         }
 
-        public void FindAbout(ref string output, string name, string path)
+        public void FindAbout(ref string outputs, string name, string path)
         {
             bool found = false;
             XmlReaderSettings settings = new XmlReaderSettings();
@@ -98,13 +98,13 @@ namespace engines
 
             reader.MoveToContent();
 
-            output = "not found";
+            outputs = "not found";
 
             while ( (reader.Read()) && (found == false) )
             {
-                if(reader.Value.Split(',')[0] == name)
+                if(reader.Value.Split(':')[0] == name)
                 {
-                    output = reader.Value.Split(',')[1];
+                    outputs = reader.Value/*.Split(',')[1]*/;
                     found = true;
                 }
             }

@@ -7,7 +7,6 @@ namespace logs
     {
         public void AddLog(ref bool wasRead, ref int stringsWrote, string path_num, string path_log, string toWrite)
         {
-            Console.ForegroundColor = ConsoleColor.White;
             if (wasRead == false)
             {
                 wasRead = true;
@@ -37,10 +36,10 @@ namespace logs
                 StreamWriter log_writer2 = new StreamWriter(log_file2);
                 log_writer2.WriteLine(toWrite + "\n");
                 log_writer2.Close();
+                Console.ForegroundColor = ConsoleColor.White;
                 Console.WriteLine("logged: " + "\"" + toWrite + "\"");
             }
             File.WriteAllText(path_num, stringsWrote.ToString());
         }
     }
 }
-//git first
