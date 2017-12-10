@@ -10,8 +10,8 @@ namespace address
             named = false;
             if (msg.Length >= 5)
             {
-                calling = msg.Substring(0, 4);
-                if ((calling == "bot ") || (calling == "бот "))
+                calling = msg.Substring(0, 3);
+                if ((calling == "bot") || (calling == "бот"))
                 {
                     msg = msg.Replace(calling, "");
                     named = true;

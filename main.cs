@@ -126,14 +126,25 @@ namespace chatbot
                         engine.FindOut(maximum, ref outputArr, input, xmlpath);       // вывод при макс. кол-ве совпадений
 
                         // добавить проверку mode
-
-                        foreach (string vers in outputArr)
+                        if (outputArr[0] != "no matches")
                         {
-                            // Console.WriteLine("xml found");
-                            output = output + " " + vers;
+                            output = "возможные диагнозы: ";
+                            foreach (string vers in outputArr)
+                            {
+                                // Console.WriteLine("xml found");
+                               if (vers != "")
+                               {
+                                    output = output + " " + vers + ",";
+                               }
+                                //output = output.Substring(0, output.Length - 1);
+                            }
+                        }
+                        else
+                        {
+                            output = "no matches";
                         }
                     }
-                    if(ask == 2)
+                    if (ask == 2)
                     {
                         engine.FindAbout(ref output, input, info);
                     }
@@ -159,7 +170,7 @@ namespace chatbot
 
 
 
-                                                  // giving colored list of in/out messages
+                // giving colored list of in/out messages
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.WriteLine("\n" + "in:" + "\n" + input);
                 wLog.AddLog(ref opened, ref logLength, logLengthPath, logPath, "in: " + input);
