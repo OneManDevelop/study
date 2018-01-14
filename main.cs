@@ -126,7 +126,7 @@ namespace chatbot
                         engine.FindOut(maximum, ref outputArr, input, xmlpath);       // вывод при макс. кол-ве совпадений
 
                         // добавить проверку mode
-                        if (outputArr[0] != "no matches")
+                        if (outputArr[0] != "нет совпадений")
                         {
                             output = "возможные диагнозы: ";
                             foreach (string vers in outputArr)
@@ -141,7 +141,7 @@ namespace chatbot
                         }
                         else
                         {
-                            output = "no matches";
+                            output = "нет совпадений";
                         }
                     }
                     if (ask == 2)

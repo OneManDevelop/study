@@ -23,20 +23,20 @@ namespace address
             mode = 0;
             try
             {
-                if (msg.Substring(0, 9) == "симтомы ")
+                if (msg.Substring(0, 10) == " симтомы ")
                 {
                     mode = 1;
-                    msg = msg.Replace("симптомы ", "");                            //избыточное выражение для понятности кода
+                    msg = msg.Replace(" симптомы ", "");                            //избыточное выражение для понятности кода
                 }
-                if ((msg.Substring(0, 9) == "описание ") && (mode == 0))
+                if ((msg.Substring(0, 10) == " описание ") && (mode == 0))
                 {
                     mode = 2;
-                    msg = msg.Replace("описание ", "");
+                    msg = msg.Replace(" описание ", "");
                 }
-                if ((msg.Substring(0, 12)) == "все симптомы" && (mode == 0))
+                if ((msg.Substring(0, 13)) == " все симптомы" && (mode == 0))
                 {
                     mode = 3;
-                    msg = msg.Replace("все симптомы", "");
+                    msg = msg.Replace(" все симптомы", "");
                 }
             }
             catch

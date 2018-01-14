@@ -85,7 +85,7 @@ namespace engines
             }
             else
             {
-                outputs[0] = "no matches";
+                outputs[0] = "нет совпадений";
             }
         }
 
@@ -98,7 +98,7 @@ namespace engines
 
             reader.MoveToContent();
 
-            outputs = "not found";
+            outputs = "не найдено";
 
             while ( (reader.Read()) && (found == false) )
             {
